@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1>Welcome to Our Library!</h1>
+<p>This is the homepage. Feel free to explore our book catalog, or sign in to manage your rentals.</p>
+
+<div class="image-grid">
+  <!-- Book 1 -->
+  <div class="image-item">
+    <img src="{{ url_for('static', filename='images/book1.jpg') }}" alt="Book 1">
+    <h3>Book Title 1</h3>
+    <p>Amazing novel with thrilling storyline.</p>
+  </div>
+
+  <!-- Book 2 -->
+  <div class="image-item">
+    <img src="{{ url_for('static', filename='images/book2.jpg') }}" alt="Book 2">
+    <h3>Book Title 2</h3>
+    <p>Romantic story full of excitement.</p>
+  </div>
+
+  <!-- Book 3 -->
+  <div class="image-item">
+    <img src="{{ url_for('static', filename='images/book3.jpg') }}" alt="Book 3">
+    <h3>Book Title 3</h3>
+    <p>Classic detective novel, a must-read!</p>
+  </div>
+</div>
+{% endblock %}
