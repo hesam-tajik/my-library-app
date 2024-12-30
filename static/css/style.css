@@ -1,0 +1,105 @@
+/* static/css/style.css */
+
+/* General body styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Arial", sans-serif;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: white; /* Ensures text is readable on all backgrounds */
+}
+
+/* Default homepage background */
+body.default {
+  background-image: url("../images/back_ground.jpg");
+}
+
+/* Login page background */
+body.login {
+  background-image: url("../images/login.jpg");
+}
+
+/* Register page background */
+body.register {
+  background-image: url("../images/register.jpg");
+}
+
+/* Add shadow for headings and text */
+h1, p, label {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Navbar styles */
+nav {
+  background-color: rgba(44, 62, 80, 0.9); /* Transparent navbar background */
+  padding: 1rem;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  display: inline-block;
+}
+
+nav a {
+  color: #ecf0f1; /* Light text for contrast */
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0.25rem 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+nav a:hover {
+  background-color: #16a085; /* Highlight color on hover */
+  border-radius: 6px;
+}
+
+/* Container for pages */
+.container {
+  margin: 2rem auto;
+  width: 90%;
+  max-width: 1000px;
+}
+
+/* Headings */
+h1 {
+  color: #ecf0f1;
+  margin-bottom: 0.5rem;
+}
+
+/* Form styles for login and register */
+form {
+  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent form background */
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  margin: 2rem auto;
+}
+
+form input, form button {
+  width: 100%;
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+form button {
+  background-color: #2ecc71; /* Green button */
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #27ae60;
+}
