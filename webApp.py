@@ -9,42 +9,18 @@ app.secret_key = 'YOUR_SECRET_KEY_HERE'
 
 def get_connection():
     # Grab database URL from environment or fall back to local
-    db_url = os.environ.get("DATABASE_URL", "dbname=library_project user=postgres password=postgres host=localhost port=5432")
+    db_url = os.environ.get(
+        "DATABASE_URL",
+        "dbname=library_project user=postgres password=postgres host=localhost port=5432"
+    )
     return psycopg2.connect(db_url)
 
+###################################
+# 1) HOME PAGE
+###################################
 @app.route('/')
 def index():
     return render_template('index.html')
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        password_hash = hashlib.sha256(password.encode()).hexdigest()
-
-        conn = get_connection()
-        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        cur.execute("""
-            SELECT * FROM users WHERE username = %s AND password_hash = %s
-        """, (username, password_hash))
-        user = cur.fetchone()
-        cur.close()
-        conn.close()
-
-        if user:
-            session['user_id'] = user['user_id']
-            session['username'] = user['username']
-            return redirect(url_for('index'))
-        else:
-            return "Invalid credentials."
-    return render_template('login.html')
-
-# ... more routes: /register, /books, etc.
-
-if __name__ == '__main__':
-    # For local dev, run the Flask server
-    app.run(debug=True)
 
 ###################################
 # 2) USER REGISTRATION
@@ -65,16 +41,14 @@ def register():
         cur.execute("""
             INSERT INTO users (username, password_hash, location, age)
             VALUES (%s, %s, %s, %s)
-            """,
-                    (username, password_hash, location, age)
-                    )
+        """, (username, password_hash, location, age))
         conn.commit()
         cur.close()
         conn.close()
 
-        # return redirect(url_for('login'))
+        # After registering, redirect to login
+        return redirect(url_for('login'))
     return render_template('register.html')
-
 
 ###################################
 # 3) USER LOGIN
@@ -91,7 +65,7 @@ def login():
         cur.execute("""
             SELECT * FROM users
             WHERE username = %s AND password_hash = %s
-            """, (username, password_hash))
+        """, (username, password_hash))
         user = cur.fetchone()
         cur.close()
         conn.close()
@@ -104,7 +78,6 @@ def login():
             return "Invalid credentials. Try again."
     return render_template('login.html')
 
-
 ###################################
 # 4) LOGOUT
 ###################################
@@ -112,7 +85,6 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for('index'))
-
 
 ###################################
 # 5) LIST BOOKS
@@ -122,14 +94,12 @@ def list_books():
     """Show all books in the library."""
     conn = get_connection()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    # Example: sort by title
     cur.execute("SELECT * FROM books ORDER BY book_title ASC")
     all_books = cur.fetchall()
     cur.close()
     conn.close()
 
     return render_template('books.html', books=all_books)
-
 
 ###################################
 # 6) RENT A BOOK
@@ -156,7 +126,6 @@ def rent_book(isbn):
     conn.close()
     return redirect(url_for('list_books'))
 
-
 ###################################
 # 7) RETURN A BOOK
 ###################################
@@ -171,7 +140,7 @@ def return_book(rental_id):
     conn = get_connection()
     cur = conn.cursor()
 
-    # get due_date from rentals
+    # Get the due_date for the rental
     cur.execute("SELECT due_date FROM rentals WHERE rental_id = %s", (rental_id,))
     row = cur.fetchone()
     if not row:
@@ -180,12 +149,12 @@ def return_book(rental_id):
         return "Rental not found."
 
     due_date = row[0]
-    # Calculate late fee if returned after due_date
+    # Calculate late fee if returned after the due_date
     if return_date > due_date:
         days_late = (return_date - due_date).days
         late_fee = days_late * 1.0  # $1/day late fee
 
-    # update rentals
+    # Update the rental record
     cur.execute("""
         UPDATE rentals
         SET return_date = %s, late_fee = %s
@@ -196,13 +165,12 @@ def return_book(rental_id):
     conn.close()
     return redirect(url_for('list_books'))
 
-
 ###################################
-# 8) PROFILE PAGE (OPTIONAL)
+# 8) PROFILE PAGE
 ###################################
 @app.route('/profile')
 def profile():
-    """Example page that shows user info & their rentals."""
+    """Shows user info & their rentals (if logged in)."""
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
@@ -214,7 +182,7 @@ def profile():
     cur.execute("SELECT username, location, age FROM users WHERE user_id = %s", (user_id,))
     user_data = cur.fetchone()
 
-    # Get current rentals for this user
+    # Get rentals for this user
     cur.execute("""
         SELECT r.rental_id, b.book_title, r.checkout_date, r.due_date, r.return_date, r.late_fee
         FROM rentals r
@@ -228,7 +196,6 @@ def profile():
     conn.close()
 
     return render_template('profile.html', user=user_data, rentals=rentals)
-
 
 ###################################
 # RUN THE APP
