@@ -1,7 +1,3 @@
-from flask import Flask, render_template, request, redirect, url_for, session
-import psycopg2
-import psycopg2.extras
-import hashlib, datetime
 import os
 import psycopg2
 import psycopg2.extras
@@ -12,10 +8,7 @@ app = Flask(__name__)
 app.secret_key = 'YOUR_SECRET_KEY_HERE'
 
 def get_connection():
-    """
-    Connects to PostgreSQL using an environment variable called DATABASE_URL.
-    If it's not set, default to a local DB (for local testing).
-    """
+    # Grab database URL from environment or fall back to local
     db_url = os.environ.get("DATABASE_URL", "dbname=library_project user=postgres password=postgres host=localhost port=5432")
     return psycopg2.connect(db_url)
 
@@ -23,10 +16,34 @@ def get_connection():
 def index():
     return render_template('index.html')
 
-# ... (Other routes like /login, /register, /books, etc.) ...
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        password_hash = hashlib.sha256(password.encode()).hexdigest()
+
+        conn = get_connection()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        cur.execute("""
+            SELECT * FROM users WHERE username = %s AND password_hash = %s
+        """, (username, password_hash))
+        user = cur.fetchone()
+        cur.close()
+        conn.close()
+
+        if user:
+            session['user_id'] = user['user_id']
+            session['username'] = user['username']
+            return redirect(url_for('index'))
+        else:
+            return "Invalid credentials."
+    return render_template('login.html')
+
+# ... more routes: /register, /books, etc.
 
 if __name__ == '__main__':
-    # For local testing:
+    # For local dev, run the Flask server
     app.run(debug=True)
 
 ###################################
@@ -55,7 +72,7 @@ def register():
         cur.close()
         conn.close()
 
-        return redirect(url_for('login'))
+        # return redirect(url_for('login'))
     return render_template('register.html')
 
 
