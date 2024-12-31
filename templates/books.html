@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Books{% endblock %}
+
+{% block content %}
+<h1>Book Catalog</h1>
+<p>Select a subject to explore related books:</p>
+
+<div class="image-grid">
+  <!-- Literature -->
+  <div class="image-item">
+    <a href="{{ url_for('books_by_subject', subject='Literature') }}">
+      <img src="{{ url_for('static', filename='images/book1.jpg') }}" alt="Literature">
+    </a>
+    <h3>Literature</h3>
+    <p>Amazing novels with thrilling storylines.</p>
+  </div>
+
+  <!-- Philosophy -->
+  <div class="image-item">
+    <a href="{{ url_for('books_by_subject', subject='Philosophy') }}">
+      <img src="{{ url_for('static', filename='images/book2.jpg') }}" alt="Philosophy">
+    </a>
+    <h3>Philosophy</h3>
+    <p>Explore the world of thought and reason.</p>
+  </div>
+
+  <!-- History -->
+  <div class="image-item">
+    <a href="{{ url_for('books_by_subject', subject='History') }}">
+      <img src="{{ url_for('static', filename='images/book3.jpg') }}" alt="History">
+    </a>
+    <h3>History</h3>
+    <p>Delve into the past and learn from it.</p>
+  </div>
+
+  <!-- Sociology -->
+  <div class="image-item">
+    <a href="{{ url_for('books_by_subject', subject='Sociology') }}">
+      <img src="{{ url_for('static', filename='images/book4.jpg') }}" alt="Sociology">
+    </a>
+    <h3>Sociology</h3>
+    <p>Insights into social structures and cultures.</p>
+  </div>
+</div>
+{% endblock %}
