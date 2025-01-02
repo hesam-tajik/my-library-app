@@ -17,10 +17,24 @@
 <p><strong>Author:</strong> {{ book.bookauthor }}</p>
 <p><strong>Year:</strong> {{ book.yearofpublication }}</p>
 
-<p class="rating-invite">
-  If you search about the book, give it a mark!
-</p>
-<!-- ... etc ... -->
+<!-- Example: both lines in one container if you want them closely together -->
+<div>
+  <!-- Big and bold line -->
+  <p style="font-weight: bold; font-size: 1.2rem; margin: 1rem 0;">
+    If you search about the book, give it a mark!
+  </p>
+
+  <!-- "Search this book online" link in the same container if you want -->
+  <p>
+    <a 
+      href="{{ url_for('search_book', book_title=book.booktitle) }}" 
+      target="_blank"
+      style="color: #3498db; text-decoration: underline; font-weight: bold;"
+    >
+      Search this book online
+    </a>
+  </p>
+</div>
 
 <!-- Rating form -->
 <form method="POST" action="{{ url_for('rate_book', book_title=book.booktitle) }}">
@@ -29,6 +43,3 @@
   <button type="submit">Submit</button>
 </form>
 {% endblock %}
-<p class="rating-invite">
-  If you search about the book, give it a mark!
-</p>
