@@ -1,0 +1,44 @@
+<!-- templates/profile.html -->
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+  <h1>{{ user.username }}'s Profile</h1>
+  <p>Location: {{ user.location }}</p>
+  <p>Age: {{ user.age }}</p>
+
+  <h2>Your Rentals</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Rental ID</th>
+        <th>Book Title</th>
+        <th>Checkout</th>
+        <th>Due</th>
+        <th>Return</th>
+        <th>Late Fee</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rentals %}
+      <tr>
+        <td>{{ r.rental_id }}</td>
+        <td>{{ r.book_title }}</td>
+        <td>{{ r.checkout_date }}</td>
+        <td>{{ r.due_date }}</td>
+        <td>{{ r.return_date if r.return_date else 'Not Returned' }}</td>
+        <td>${{ r.late_fee }}</td>
+        <td>
+          {% if not r.return_date %}
+          <form action="{{ url_for('return_book', rental_id=r.rental_id) }}" method="POST" style="display:inline;">
+            <button type="submit">Return</button>
+          </form>
+          {% else %}
+          Returned
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

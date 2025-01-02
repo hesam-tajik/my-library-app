@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}{{ subject }} Books{% endblock %}
+
+{% block content %}
+<h1>{{ subject }} Books</h1>
+<p>Explore the collection of books categorized under {{ subject }}:</p>
+
+<table class="book-table">
+  <thead>
+    <tr>
+      <th>ISBN</th>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Year</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for book in books %}
+    <tr>
+      <td>{{ book.isbn }}</td>
+      <td>{{ book.booktitle }}</td>
+      <td>{{ book.bookauthor }}</td>
+      <td>{{ book.yearofpublication }}</td>
+      <td>
+        <a href="{{ url_for('book_detail', book_title=book.booktitle) }}">View Details</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
