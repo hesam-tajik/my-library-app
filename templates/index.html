@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1>Welcome{% if user_name %}, {{ user_name }}{% endif %}!</h1>
+<p>This is the homepage. Feel free to explore our library.</p>
+
+<!-- Chart Container -->
+<canvas id="myChart" width="400" height="200"></canvas>
+
+<script>
+  // Fetch the data from our Flask route
+  fetch("{{ url_for('books_data') }}")
+    .then(response => response.json())
+    .then(data => {
+      // Separate out the labels (years) and values (counts)
+      const labels = data.map(item => item.year);
+      const values = data.map(item => item.count);
+
+      // Build the chart
+      const ctx = document.getElementById('myChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Books Published',
+            data: values,
+            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              labels: {
+                color: 'white',           // Color of the legend text
+              }
+            },
+            title: {
+              display: false // or true if you want a chart title
+              // text: 'Books Published by Year',
+              // color: 'white'
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                color: 'white'           // X-axis labels
+              },
+              title: {
+                display: true,
+                text: 'Year of Publication',
+                color: 'white'           // X-axis title
+              },
+              grid: {
+                color: 'rgba(255, 255, 255, 0.2)', // vertical grid lines
+                borderColor: 'white'              // X-axis line color
+              }
+            },
+            y: {
+              ticks: {
+                color: 'white'           // Y-axis labels
+              },
+              title: {
+                display: true,
+                text: 'Number of Books',
+                color: 'white'           // Y-axis title
+              },
+              grid: {
+                color: 'rgba(255, 255, 255, 0.2)', // horizontal grid lines
+                borderColor: 'white'              // Y-axis line color
+              }
+            }
+          }
+        }
+      });
+    })
+    .catch(error => {
+      console.error("Error fetching book data:", error);
+    });
+</script>
+{% endblock %}
