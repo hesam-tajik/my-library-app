@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ book.booktitle }}</h1>
+<p><strong>Author:</strong> {{ book.bookauthor }}</p>
+<p><strong>Year:</strong> {{ book.yearofpublication }}</p>
+
+<!-- Show the image (inline) and also provide a link to open it separately -->
+{% if book.imageurl %}
+  <p>
+    <a href="{{ book.imageurl }}" target="_blank" style="color: #3498db;">
+      View Book Photo Click Here
+    </a>
+  </p>
+  <img
+    src="{{ book.imageurl }}"
+    alt="Cover of {{ book.booktitle }}"
+    style="max-width: 300px; display: block; margin: 1rem 0;"
+  >
+{% endif %}
+
+<!-- Example of average age and rating (if you have them) -->
+{% if average_age %}
+  <p><strong>Average Age of people who read this book:</strong> {{ average_age }}</p>
+{% endif %}
+{% if average_rating %}
+  <p><strong>Average Rating of this book from people:</strong> {{ average_rating }}</p>
+{% endif %}
+
+<!-- Link to search this book online -->
+<p>
+  <a
+    href="{{ url_for('search_book', book_title=book.booktitle) }}"
+    target="_blank"
+    style="color: #3498db; font-weight: bold;"
+  >
+    For More Information About This Book Click Here
+  </a>
+</p>
+
+<p style="font-weight: bold; font-size: 1.2rem;">
+  If you search about the book, give it a mark!
+</p>
+
+<form method="POST" action="{{ url_for('rate_book', book_title=book.booktitle) }}">
+  <label for="rating" style="margin-right: 1rem;">
+    Rate this book (0 to 10):
+  </label>
+<input
+  type="range"
+  name="rating"
+  min="0"
+  max="10"
+  value="5"
+  oninput="this.nextElementSibling.value = this.value"
+  style="vertical-align: middle; width: 150px;"
+><output style="margin-left: 0.5rem;">5</output>
+  <button
+    type="submit"
+    style="margin-left: 1rem;"
+  >
+    Submit
+  </button>
+</form>
+
+{% endblock %}
