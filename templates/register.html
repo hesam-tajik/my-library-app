@@ -6,21 +6,22 @@
   
   <!-- Display error message if it exists -->
   {% if error %}
-  <p style="color: red; font-weight: bold;">{{ error }}</p>
+    <p style="color: red; font-weight: bold;">{{ error }}</p>
   {% endif %}
-  
+
   <form method="POST" action="{{ url_for('register') }}">
     <label for="username">Username:</label>
-    <input type="text" name="username" required>
+    <input type="text" name="username" placeholder="Choose a username" required>
 
     <label for="password">Password:</label>
-    <input type="password" name="password" required>
+    <input type="password" name="password" placeholder="Choose a password" required>
 
     <label for="location">Location:</label>
-    <input type="text" name="location" required>
+    <input type="text" name="location" placeholder="Enter your location" required>
 
     <label for="age">Age (optional):</label>
-    <input type="number" name="age">
+
+    <input type="number" name="age" placeholder="Enter your age">
 
     <button type="submit">Register</button>
   </form>
