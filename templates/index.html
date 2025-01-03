@@ -5,6 +5,35 @@
 <h1>Welcome{% if user_name %}, {{ user_name }}{% endif %}!</h1>
 <p>This is the homepage. Feel free to explore our library.</p>
 
+
+<form method="POST" action="{{ url_for('search') }}" style="margin: 2rem 0;">
+  <label for="book_title" style="font-size: 1.2rem; font-weight: bold;">
+    Search for a Book:
+  </label>
+  <input
+    type="text"
+    name="book_title"
+    id="book_title"
+    placeholder="Enter book title"
+    style="padding: 0.5rem; margin-right: 1rem; width: 300px;"
+    required
+  >
+  <button type="submit" style="padding: 0.5rem 1rem; font-size: 1rem;">
+    Search
+  </button>
+</form>
+
+<!-- Display flashed messages -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div style="color: red; font-weight: bold; margin-top: 1rem;">
+      {% for msg in messages %}
+        <p>{{ msg }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
 <!-- Chart Container -->
 <canvas id="myChart" width="400" height="200"></canvas>
 
@@ -134,6 +163,8 @@
       });
     });
 </script>
+
+
 
 
 {% endblock %}
