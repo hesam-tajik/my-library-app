@@ -212,35 +212,49 @@ a:visited {
   font-size: 1.2rem;
 }
 
-input[type="text"] {
+
+
+
+
+input[type="text"],
+input[type="password"],
+input[type="number"] {
     background-color: transparent;
-    border: 1px solid #ffffff; /* Adjust the border color if needed */
-    color: #ffffff; /* Text color */
+    border: 1px solid rgba(255, 255, 255, 0.5); /* Semi-transparent white border */
+    color: white; /* Text color matches the background theme */
     padding: 0.5rem;
     font-size: 1rem;
     outline: none; /* Removes the default focus outline */
+    border-radius: 5px; /* Adds rounded corners */
+    -webkit-appearance: none; /* Removes default styling on input fields in Safari/Chrome */
+    -moz-appearance: textfield; /* Removes default styling on number input fields in Firefox */
 }
 
-input[type="text"]::placeholder {
-    color: #cccccc; /* Placeholder text color */
-    opacity: 1; /* Ensures the placeholder is visible */
+input[type="text"]::placeholder,
+input[type="password"]::placeholder,
+input[type="number"]::placeholder {
+    color: rgba(255, 255, 255, 0.7); /* Placeholder color */
 }
 
-input[type="text"]:focus {
-    border-color: #3498db; /* Border color on focus */
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus {
+    border-color: #3498db; /* Blue border color on focus */
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5); /* Subtle glow effect */
 }
 
 
+/* Submit button styles */
 button[type="submit"] {
     background-color: #3498db; /* Button color */
-    color: #ffffff; /* Text color */
+    color: white; /* Text color */
     border: none;
     padding: 0.5rem 1rem;
     font-size: 1rem;
     cursor: pointer;
+    border-radius: 5px; /* Optional: Adds rounded corners */
 }
 
 button[type="submit"]:hover {
-    background-color: #2874a6; /* Darker shade on hover */
+    background-color: #2874a6; /* Darker blue on hover */
 }
-
