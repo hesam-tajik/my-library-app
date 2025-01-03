@@ -212,3 +212,35 @@ a:visited {
   font-size: 1.2rem;
 }
 
+input[type="text"] {
+    background-color: transparent;
+    border: 1px solid #ffffff; /* Adjust the border color if needed */
+    color: #ffffff; /* Text color */
+    padding: 0.5rem;
+    font-size: 1rem;
+    outline: none; /* Removes the default focus outline */
+}
+
+input[type="text"]::placeholder {
+    color: #cccccc; /* Placeholder text color */
+    opacity: 1; /* Ensures the placeholder is visible */
+}
+
+input[type="text"]:focus {
+    border-color: #3498db; /* Border color on focus */
+}
+
+
+button[type="submit"] {
+    background-color: #3498db; /* Button color */
+    color: #ffffff; /* Text color */
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #2874a6; /* Darker shade on hover */
+}
+
