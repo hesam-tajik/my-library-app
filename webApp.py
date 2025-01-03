@@ -161,7 +161,7 @@ def book_detail(book_title):
     conn = get_connection()
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-    # 1) Fetch the book by title
+    # Fetch book details
     cur.execute("SELECT * FROM book WHERE booktitle = %s", (book_title,))
     book = cur.fetchone()
 
@@ -170,35 +170,36 @@ def book_detail(book_title):
         conn.close()
         return "Book not found."
 
-    isbn = book['isbn']  # or whatever your column name is
+    # Fetch average age from `average_age_book`
+    cur.execute("""
+        SELECT average_age
+        FROM average_age_book
+        WHERE booktitle = %s
+    """, (book_title,))
+    avg_age_row = cur.fetchone()
+    avg_age = avg_age_row['average_age'] if avg_age_row else "No average age calculated yet"
 
-    # 2) Fetch the average age from average_age_book
-    cur.execute("SELECT average_age FROM average_age_book", (isbn,))
-    age_row = cur.fetchone()
-    if age_row:
-        average_age = age_row['average_age']  # column name in average_age_book
-    else:
-        average_age = None
-
-    # 3) Fetch the average rating from average_rating_book
-    cur.execute("SELECT average_rating FROM average_rating_book ", (isbn,))
-    rating_row = cur.fetchone()
-    if rating_row:
-        average_rating = rating_row['average_rating']  # column name in average_rating_book
-    else:
-        average_rating = None
+    # Fetch average rating from `average_rating_book`
+    cur.execute("""
+        SELECT average_rating
+        FROM average_rating_book
+        WHERE booktitle = %s
+    """, (book_title,))
+    avg_rating_row = cur.fetchone()
+    avg_rating = avg_rating_row['average_rating'] if avg_rating_row else "No average rate calculated yet"
 
     cur.close()
     conn.close()
 
-    # 4) Pass these values to the template
+    # Render the book details page
     return render_template(
         'book_detail.html',
         book=book,
-        page_class="book-detail-page",
-        average_age=average_age,
-        average_rating=average_rating
+        average_age=avg_age,
+        average_rating=avg_rating,
+        page_class="book-detail-page"
     )
+
 ###################################
 # 7) BOOKS BY SUBJECT
 ###################################
@@ -312,11 +313,42 @@ def average_age_data():
             "avg_age": round(row["avg_age"], 2)  # Rounded to 2 decimal places
         })
 
+
     return jsonify(data)
 
+
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    if request.method == 'POST':
+        book_title = request.form.get('book_title', '').strip()
+        if not book_title:
+            flash("Please enter a book title to search.")
+            return redirect(url_for('index'))
+
+        # Check if the book exists in the database
+        conn = get_connection()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        # Use ILIKE for case-insensitive search and support partial matches
+        cur.execute("SELECT * FROM book WHERE booktitle ILIKE %s", (f"%{book_title}%",))
+        book = cur.fetchone()
+        cur.close()
+        conn.close()
+
+        if book:
+            # Redirect to the book detail page
+            return redirect(url_for('book_detail', book_title=book['booktitle']))
+        else:
+            flash("Book not found. Please try another title.")
+            return redirect(url_for('index'))
+
+    return redirect(url_for('index'))
 
 ###################################
 # RUN THE APP
 ###################################
 if __name__ == '__main__':
     app.run(debug=True)
+
+
